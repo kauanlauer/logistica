@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Frete Transportadoras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilo do cabeçalho */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        /* Logo */
+        #logo img {
+            width: 50px;  /* Tamanho do logo */
+            height: auto;
+        }
+
+        /* Nome da empresa */
+        #company-name {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #company-name {
+                margin-top: 10px;
+            }
+        }
+ /* Estilo para cores personalizadas */
+ :root {
+    --primary-color: #046A82;
+    --secondary-color: #C8D205;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 4px;
+    margin: 5px 0;
+  }
+
+  .sidebar a:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+  }
+
+  .sidebar .logo {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .sidebar .logo img {
+    max-width: 120px;
+  }
+
+  .sidebar .nav-item.active a {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: bold;
+  }
+
+  /* Espaço para o conteúdo ao lado do menu */
+  .main-content {
+    margin-left: 250px;
+    padding: 20px;
+  }
+
+  /* Responsividade para dispositivos móveis */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      left: -100%;
+      transition: left 0.3s ease-in-out;
+      width: 250px;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .main-content {
+      margin-left: 0;
+    }
+
+    .toggle-sidebar {
+      cursor: pointer;
+      color: var(--primary-color);
+      font-size: 24px;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+    }
+  }
+
+    </style>
+</head>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column">
+      <div class="logo">
+        <img src="https://www.manupackaging.co.uk/images/ww/number%201.png" alt="Logo" />
+      </div>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+            <a href="index.html" class="nav-link">Inicio</a>
+        </li>
+        <li class="nav-item">
+            <a href="CalculoFitas.html" class="nav-link">Fitas PP CwB</a>
+        </li>
+        <li class="nav-item active">
+            <a href="CalculosTransportadoras.html" class="nav-link">Calculo transportadoras</a>
+        </li>
+    </ul>
+    </nav>
+
+    <!-- Botão para abrir o menu em dispositivos móveis -->
+    <span class="toggle-sidebar d-md-none">
+      <i class="bi bi-list"></i>
+    </span>
+
+    <!-- Espaço vazio para o conteúdo -->
+    <div class="main-content">
+      <!-- Quando você adicionar algo, ele ficará aqui ao lado do menu -->
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Ativar/desativar menu em dispositivos móveis
+    document.querySelector('.toggle-sidebar').addEventListener('click', function () {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculo de frete trnasportadoras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .result {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .result p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Calculo de Frete - Expresso São Miguel</h2>
+        <form id="freteFormMiguel">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="pesoBrutoMiguel" class="form-label">Peso Bruto (kg)</label>
+                    <input type="number" class="form-control" id="pesoBrutoMiguel" placeholder="Informe o peso em kg" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="valorNFMiguel" class="form-label">Valor da Nota Fiscal (R$)</label>
+                    <input type="number" class="form-control" id="valorNFMiguel" placeholder="Informe o valor da NF" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="regiaoMiguel" class="form-label">Região</label>
+                    <select class="form-select" id="regiaoMiguel" required>
+                        <option value="">Selecione a região</option>
+                        <option value="PR5">Abatiá-PR</option>
+                        <option value="SC1">Abelardo Luz-SC</option>
+                        <option value="RS6">Aceguá-RS</option>
+                        <option value="SC3">Agrolândia-SC</option>
+                        <option value="PR6">Almirante Tamandaré-PR</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Calcular Frete</button>
+        </form>
+
+        <div id="resultadoMiguel" class="result d-none">
+            <h4>Resultado do Cálculo</h4>
+            <p id="resultadoFretePesoMiguel"></p>
+            <p id="resultadoFreteKgMiguel"></p>
+            <p id="resultadoFreteValorMiguel"></p>
+            <p id="resultadoPedagioMiguel"></p>
+            <p id="resultadoGrisMiguel"></p>
+            <p id="resultadoBaseCalculoMiguel"></p>
+            <p id="resultadoICMSMiguel"></p>
+            <p id="resultadoPorcentagemICMSMiguel"></p>
+            <p id="resultadoTotalMiguel"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("freteFormMiguel").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const pesoMiguel = parseFloat(document.getElementById("pesoBrutoMiguel").value);
+            const valorNFMiguel = parseFloat(document.getElementById("valorNFMiguel").value);
+            const regiaoMiguel = document.getElementById("regiaoMiguel").value;
+
+            // Tabela de cálculo de frete
+            const tabelaFreteMiguel = {
+                "PR5": { taxa: 49.19, freteQuilo: 0.640 },
+                "SC1": { taxa: 54.99, freteQuilo: 0.710 },
+                "RS6": { taxa: 91.84, freteQuilo: 1.156 },
+                "SC3": { taxa: 45.91, freteQuilo: 0.600 },
+                "PR6": { taxa: 38.73, freteQuilo: 0.515 }
+            };
+
+            const pedagioMiguel = 3.20; // Pedágio por 100kg
+            const grisPercentMiguel = 0.0015; // GRIS padrão
+            const icmsAlíquotaMiguel = getICMSAlíquotaMiguel(regiaoMiguel); // Função para determinar a alíquota do ICMS
+
+            if (!tabelaFreteMiguel[regiaoMiguel]) {
+                alert("Região não encontrada na tabela!");
+                return;
+            }
+
+            const { taxa, freteQuilo } = tabelaFreteMiguel[regiaoMiguel];
+
+            // Cálculo do frete peso (peso * frete por quilo)
+            let fretePesoMiguel = pesoMiguel * freteQuilo;
+
+            // Ajusta o valor do frete com um percentual (25% de ajuste)
+            let percentualAjusteMiguel = 0.25; // 25%
+            let fretePesoAjustadoMiguel = fretePesoMiguel * (1 + percentualAjusteMiguel);
+
+            // Soma com a taxa da tabela
+            let somaComTaxaMiguel = fretePesoAjustadoMiguel + taxa;
+
+            // Calcula o valor do frete por quilo ajustado
+            let valorFreteKgMiguel = somaComTaxaMiguel / pesoMiguel;
+
+            // Cálculo do valor do frete pela NF (0.5% do valor da NF)
+            let freteValorMiguel = valorNFMiguel * 0.005; 
+
+            // Cálculo do GRIS (valor mínimo de R$ 3,20)
+            let grisMiguel = Math.max(valorNFMiguel * grisPercentMiguel, 3.20); 
+
+            // Cálculo do pedágio
+            let pedagioValorMiguel = Math.ceil(pesoMiguel / 100) * pedagioMiguel;
+
+            // Base de cálculo para ICMS
+            const baseCalculo1Miguel = somaComTaxaMiguel + freteValorMiguel + grisMiguel;  // Soma do frete ajustado, valor da NF e GRIS
+            const baseCalculo2Miguel = baseCalculo1Miguel / (1 - icmsAlíquotaMiguel);  // Ajusta para o ICMS
+            const valorICMSMiguel = baseCalculo2Miguel * icmsAlíquotaMiguel;  // Valor do ICMS
+
+            // Total do frete
+            const totalFreteMiguel = baseCalculo1Miguel + pedagioValorMiguel + valorICMSMiguel;  // Soma do frete, pedagio e ICMS
+
+            // Exibindo os resultados com explicações
+            document.getElementById("resultadoFretePesoMiguel").textContent = `Valor do Frete Peso: R$ ${fretePesoMiguel.toFixed(2)}`;
+            document.getElementById("resultadoFreteKgMiguel").textContent = `Valor do Frete por Kg: R$ ${valorFreteKgMiguel.toFixed(2)} `;
+            document.getElementById("resultadoFreteValorMiguel").textContent = `Frete Valor (NF): R$ ${freteValorMiguel.toFixed(2)} `;
+            document.getElementById("resultadoPedagioMiguel").textContent = `Pedágio: R$ ${pedagioValorMiguel.toFixed(2)} `;
+            document.getElementById("resultadoGrisMiguel").textContent = `GRIS: R$ ${grisMiguel.toFixed(2)} `;
+            document.getElementById("resultadoBaseCalculoMiguel").textContent = `Base de Cálculo do ICMS: R$ ${baseCalculo1Miguel.toFixed(2)}`;
+            document.getElementById("resultadoICMSMiguel").textContent = `ICMS: R$ ${valorICMSMiguel.toFixed(2)}`;
+            document.getElementById("resultadoTotalMiguel").textContent = `Total do Frete: R$ ${totalFreteMiguel.toFixed(2)}`;
+
+            // Exibe o resultado
+            document.getElementById("resultadoMiguel").classList.remove("d-none");
+        });
+
+        // Função para determinar a alíquota de ICMS com base na região (estado)
+        function getICMSAlíquotaMiguel(regiaoMiguel) {
+            const estados7PorcentoMiguel = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "GO", "MA", "MT", "MS", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "SC", "SE", "TO"];
+            const estados12PorcentoMiguel = ["RS", "SP", "MG"];
+
+            const estadoMiguel = regiaoMiguel.slice(0, 2); // Extrai os dois primeiros caracteres da região para identificar o estado
+
+            if (estados7PorcentoMiguel.includes(estadoMiguel)) {
+                return 0.07; // 7% ICMS
+            } else if (estados12PorcentoMiguel.includes(estadoMiguel)) {
+                return 0.12; // 12% ICMS
+            } else {
+                return 0; // Estado inválido
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculo de Frete - Aguia Sul</title>
+    <!-- Link para o Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Base do layout */
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Centralizar e ajustar o container */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Cabeçalho */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        /* Formulário */
+        form .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555555;
+            font-size: 1rem;
+        }
+
+        form input,
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+        }
+
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: #ffffff;
+        }
+
+        /* Botão */
+        form .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1rem;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Resultado */
+        #resultado {
+            background-color: #eef2f5;
+            padding: 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        #resultado h4 {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            font-size: 1.2rem;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+
+        /* Estilo Responsivo */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+                border-radius: 6px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            form .btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            #resultado h4 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calculo de Frete - Aguia Sul</h1>
+        </header>
+
+        <form id="formFrete">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="peso" class="form-label">Peso Bruto (kg)</label>
+                    <input type="number" class="form-control" id="peso" placeholder="Ex: 15" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="valorNF" class="form-label">Valor da NF (R$)</label>
+                    <input type="number" class="form-control" id="valorNF" placeholder="Ex: 500" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="destino" class="form-label">Local de Destino</label>
+                    <select class="form-select" id="destino" required>
+                        <option value="">Selecione</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="ES">Espírito Santo</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Calcular Frete</button>
+        </form>
+
+        <div id="resultado" class="mt-4" style="display: none;">
+            <h4>Resumo do Frete</h4>
+            <p><strong>SECCAT:</strong> R$ <span id="seccat"></span></p>
+            <p><strong>GRIS:</strong> R$ <span id="gris"></span></p>
+            <p><strong>ADV:</strong> R$ <span id="adv"></span></p>
+            <p><strong>Pedágio:</strong> R$ <span id="pedagio"></span></p>
+            <p><strong>Frete Peso:</strong> R$ <span id="fretePeso"></span></p>
+            <p><strong>ICMS:</strong> R$ <span id="icms"></span></p>
+            <p><strong>Frete Total:</strong> R$ <span id="freteTotal"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('formFrete').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const peso = parseFloat(document.getElementById('peso').value);
+            const valorNF = parseFloat(document.getElementById('valorNF').value);
+            const destino = document.getElementById('destino').value;
+
+            if (!peso || !valorNF || !destino) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            // Tabela de valores de frete por destino
+            const tabelaFrete = {
+                'SP': [137.00, 156.81, 161.00, 189.91, 275.34, 1.07],
+                'MG': [137.00, 156.81, 161.00, 189.91, 275.34, 1.07],
+                'RJ': [189.34, 199.20, 255.31, 281.25, 326.40, 2.2347],
+                'ES': [189.34, 199.20, 255.31, 281.25, 326.40, 2.2347]
+            };
+
+            const pedagio = 8.00;
+            const txFixa = 15.98;
+            const grisPercent = valorNF <= 10000 ? 0.0012 : 0.0024;
+            const advPercent = 0.0032;
+            const aliquotaPercent = destino === "SP" || destino === "MG" || destino === "RJ" || destino === "ES" ? 0.12 : 0;
+
+            // Faixa do frete
+            const faixaFrete = peso <= 10 ? 0 :
+                peso <= 20 ? 1 :
+                peso <= 40 ? 2 :
+                peso <= 60 ? 3 : 4;
+
+            const seccat = tabelaFrete[destino][faixaFrete];
+            const gris = grisPercent * valorNF;
+            const adv = advPercent * valorNF;
+            const pedagioTotal = Math.ceil(peso / 100) * pedagio;
+
+            // Cálculo de frete por peso extra
+            const pesoFracionado = peso > 100 ? peso - 100 : 0;
+            const adicionalKg = tabelaFrete[destino][5];
+            const fretePeso = pesoFracionado * adicionalKg;
+
+            const baseCalculo1 = seccat + txFixa + fretePeso + adv + gris;
+            const aliquotaDecimal = 1 - aliquotaPercent;
+            const baseCalculo2 = baseCalculo1 / aliquotaDecimal;
+            const icms = baseCalculo1 * aliquotaPercent;
+
+            const freteTotal = baseCalculo1 + pedagioTotal + icms;
+
+            document.getElementById('seccat').innerText = seccat.toFixed(2);
+            document.getElementById('gris').innerText = gris.toFixed(2);
+            document.getElementById('adv').innerText = adv.toFixed(2);
+            document.getElementById('pedagio').innerText = pedagioTotal.toFixed(2);
+            document.getElementById('fretePeso').innerText = fretePeso.toFixed(2);
+            document.getElementById('icms').innerText = icms.toFixed(2);
+            document.getElementById('freteTotal').innerText = freteTotal.toFixed(2);
+
+            document.getElementById('resultado').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cálculo de Frete Alfa Transporte</title>
+  <!-- Link para o Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f9f9f9;
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+   
+
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .btn-custom {
+      background-color: #007bff;
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-custom:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      background-color: #eef2f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    .result h3 {
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Cálculo de Frete Alfa Transporte</h1>
+    <form>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="pesoAlfa" class="form-label">Peso Bruto (kg):</label>
+          <input type="number" class="form-control" id="pesoAlfa" placeholder="Digite o peso bruto">
+        </div>
+
+        <div class="col-md-4">
+          <label for="valorAlfa" class="form-label">Valor da NF (R$):</label>
+          <input type="number" class="form-control" id="valorAlfa" placeholder="Digite o valor da NF">
+        </div>
+
+        <div class="col-md-4">
+          <label for="destinoAlfa" class="form-label">Destino:</label>
+          <select id="destinoAlfa" class="form-select">
+            <option value="PR">PR-Curitiba</option>
+            <option value="DF">DF-Distrito Federal</option>
+            <option value="ES">ES-Espírito Santo</option>
+            <option value="GO">GO-Goiás</option>
+            <option value="MG">MG-Minas Gerais</option>
+            <option value="RJ">RJ-Rio de Janeiro</option>
+            <option value="SC">SC-Santa Catarina</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-custom" onclick="calcularAlfa()">Calcular Frete</button>
+    </form>
+
+    <div id="alfaResultado" class="result" style="display:none;">
+      <h3>Resultado do Cálculo</h3>
+      <p><strong>Frete Peso:</strong> R$ <span id="fretePesoAlfa"></span></p>
+      <p><strong>Frete Valor (%):</strong> R$ <span id="freteValorAlfa"></span></p>
+      <p><strong>Pedágio:</strong> R$ <span id="pedagioAlfa"></span></p>
+      <p><strong>GRIS (%):</strong> R$ <span id="grisAlfa"></span></p>
+      <p><strong>Base de Cálculo 1:</strong> R$ <span id="baseCalculo1Alfa"></span></p>
+      <p><strong>Base de Cálculo 2:</strong> R$ <span id="baseCalculo2Alfa"></span></p>
+      <p><strong>Aliquota IMCs:</strong> <span id="aliquotaIMCsAlfa"></span></p>
+      <p><strong>ICMs:</strong> R$ <span id="icmsAlfa"></span></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function calcularAlfa() {
+      const pesoBrutoAlfa = parseFloat(document.getElementById('pesoAlfa').value);
+      const valorNFAlfa = parseFloat(document.getElementById('valorAlfa').value);
+      const destinoAlfa = document.getElementById('destinoAlfa').value;
+
+      const tabelaFreteAlfa = {
+        'PR': {peso50: 28.21, peso100: 33.85, taxaEmbarque: 33.85, fretePeso: 0.277, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'DF': {peso50: 112.84, peso100: 135.41, taxaEmbarque: 135.41, fretePeso: 1.241, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'ES': {peso50: 78.99, peso100: 95.91, taxaEmbarque: 95.91, fretePeso: 1.072, freteValor: 0.0030, gris: 0.0015, icms: 0.07},
+        'GO': {peso50: 98.17, peso100: 107.20, taxaEmbarque: 107.20, fretePeso: 1.264, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'MG': {peso50: 95.91, peso100: 100.43, taxaEmbarque: 100.43, fretePeso: 0.937, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'RJ': {peso50: 67.70, peso100: 78.99, taxaEmbarque: 78.99, fretePeso: 0.722, freteValor: 0.0030, gris: 0.0050, icms: 0.12},
+        'SC': {peso50: 33.85, peso100: 45.14, taxaEmbarque: 45.14, fretePeso: 0.395, freteValor: 0.0030, gris: 0.0015, icms: 0.12}
+      };
+
+      if (isNaN(pesoBrutoAlfa) || isNaN(valorNFAlfa)) {
+        alert("Por favor, preencha todos os campos corretamente.");
+        return;
+      }
+
+      const freteAlfa = tabelaFreteAlfa[destinoAlfa];
+
+      let fretePesoAlfa = 0;
+      if (pesoBrutoAlfa <= 50) {
+        fretePesoAlfa = freteAlfa.peso50;
+      } else if (pesoBrutoAlfa <= 100) {
+        fretePesoAlfa = freteAlfa.peso100;
+      } else {
+        let excessoPesoAlfa = pesoBrutoAlfa - 100;
+        fretePesoAlfa = freteAlfa.peso100 + (excessoPesoAlfa * freteAlfa.fretePeso);
+      }
+
+      let freteValorAlfa = valorNFAlfa * freteAlfa.freteValor;
+      let grisAlfa = valorNFAlfa * freteAlfa.gris;
+      let pedagioAlfa = Math.ceil(pesoBrutoAlfa / 100) * 4.98;
+
+      let baseCalculo1Alfa = fretePesoAlfa + freteValorAlfa + grisAlfa + freteAlfa.peso100;
+      let aliquotaIMCsAlfaDecimal = freteAlfa.icms;
+      let baseCalculo2Alfa = baseCalculo1Alfa / (1 - aliquotaIMCsAlfaDecimal);
+      let icmsAlfa = baseCalculo2Alfa * aliquotaIMCsAlfaDecimal;
+
+      document.getElementById('fretePesoAlfa').innerText = fretePesoAlfa.toFixed(2);
+      document.getElementById('freteValorAlfa').innerText = freteValorAlfa.toFixed(2);
+      document.getElementById('pedagioAlfa').innerText = pedagioAlfa.toFixed(2);
+      document.getElementById('grisAlfa').innerText = grisAlfa.toFixed(2);
+      document.getElementById('baseCalculo1Alfa').innerText = baseCalculo1Alfa.toFixed(2);
+      document.getElementById('baseCalculo2Alfa').innerText = baseCalculo2Alfa.toFixed(2);
+      document.getElementById('aliquotaIMCsAlfa').innerText = (freteAlfa.icms * 100) + '%';
+      document.getElementById('icmsAlfa').innerText = icmsAlfa.toFixed(2);
+
+      document.getElementById('alfaResultado').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculo de Frete - Ayres</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Base do layout */
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Centralizar e ajustar o container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        /* Cabeçalho */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        /* Formulário */
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555555;
+            font-size: 1rem;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: #ffffff;
+        }
+
+        /* Botão */
+        .btn-custom {
+            background-color: #007bff;
+            color: #fff;
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        /* Resultado */
+        .result {
+            background-color: #eef2f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .result h3 {
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .result p {
+            margin: 5px 0;
+        }
+
+        /* Estilo Responsivo */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+                border-radius: 6px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn-custom {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            .result h3 {
+                font-size: 1.1rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <h1>Calculo de Frete - Ayres</h1>
+        </header>
+
+        <form id="ayresForm">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="ayresPeso" class="form-label">Peso Bruto (kg)</label>
+                    <input type="number" class="form-control" id="ayresPeso" placeholder="Ex: 15" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="ayresNF" class="form-label">Valor da NF (R$)</label>
+                    <input type="number" class="form-control" id="ayresNF" placeholder="Ex: 500" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="ayresDestino" class="form-label">Local de Destino</label>
+                    <select class="form-select" id="ayresDestino" required>
+                        <option value="">Selecione</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="ES">Espírito Santo</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-custom">Calcular Frete</button>
+        </form>
+
+        <div id="ayresResultado" class="result mt-4"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("ayresForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const ayresPeso = parseFloat(document.getElementById("ayresPeso").value);
+            const ayresNF = parseFloat(document.getElementById("ayresNF").value);
+            const ayresDestino = document.getElementById("ayresDestino").value;
+
+            if (!ayresPeso || !ayresNF || !ayresDestino) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            const ayresTabela = {
+                SP: [137.00, 156.81, 161.00, 189.91, 275.34, 1.07],
+                MG: [137.00, 156.81, 161.00, 189.91, 275.34, 1.07],
+                RJ: [189.34, 199.20, 255.31, 281.25, 326.40, 2.2347],
+                ES: [189.34, 199.20, 255.31, 281.25, 326.40, 2.2347]
+            };
+            const ayresPedagio = 8.00;
+            const ayresTxFixa = 15.98;
+            const ayresGrisPercent = ayresNF <= 10000 ? 0.0012 : 0.0024;
+            const ayresAdvPercent = 0.0032;
+            const ayresAliIMCSPercent = ["SP", "MG", "RJ", "ES"].includes(ayresDestino) 
+                ? (["RJ", "ES"].includes(ayresDestino) ? 0.07 : 0.12) : 0;
+
+            const ayresFaixa = ayresPeso <= 10 ? 0 :
+                                ayresPeso <= 20 ? 1 :
+                                ayresPeso <= 40 ? 2 :
+                                ayresPeso <= 60 ? 3 : 4;
+
+            const ayresSeccat = ayresTabela[ayresDestino][ayresFaixa];
+            const ayresGris = ayresGrisPercent * ayresNF;
+            const ayresAdv = ayresAdvPercent * ayresNF;
+            const ayresPedagioTotal = Math.ceil(ayresPeso / 100) * ayresPedagio;
+
+            const ayresPesoFracionado = ayresPeso > 100 ? ayresPeso - 100 : 0;
+            const ayresFretePeso = ayresPesoFracionado * ayresTabela[ayresDestino][5];
+
+            const ayresBase1 = ayresSeccat + ayresTxFixa + ayresFretePeso + ayresAdv + ayresGris;
+            const ayresAliquotaDecimal = 1 - ayresAliIMCSPercent;
+            const ayresBase2 = ayresBase1 / ayresAliquotaDecimal;
+            const ayresICMS = ayresBase1 * ayresAliIMCSPercent;
+
+            const ayresFreteTotal = ayresBase1 + ayresPedagioTotal + ayresICMS;
+
+            document.getElementById("ayresResultado").innerHTML = `
+                <h3>Resumo do Frete</h3>
+                <p><strong>SECCAT:</strong> R$ ${ayresSeccat.toFixed(2)}</p>
+                <p><strong>GRIS:</strong> R$ ${ayresGris.toFixed(2)}</p>
+                <p><strong>ADV:</strong> R$ ${ayresAdv.toFixed(2)}</p>
+                <p><strong>Pedágio:</strong> R$ ${ayresPedagioTotal.toFixed(2)}</p>
+                <p><strong>Frete Peso:</strong> R$ ${ayresFretePeso.toFixed(2)}</p>
+                <p><strong>ICMS:</strong> R$ ${ayresICMS.toFixed(2)}</p>
+                <p><strong>Frete Total:</strong> R$ ${ayresFreteTotal.toFixed(2)}</p>
+            `;
+        });
+    </script>
+
+</body>
+</html>
