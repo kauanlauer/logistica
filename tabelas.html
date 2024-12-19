@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Frete Transportadoras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilo personalizado */
+        :root {
+            --primary-color: #046A82;
+            --secondary-color: #C8D205;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            background-color: var(--primary-color);
+            min-height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .sidebar .logo img {
+            max-width: 120px;
+        }
+
+        .sidebar .nav-item.active a {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                transition: left 0.3s ease-in-out;
+                width: 250px;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .toggle-sidebar {
+                cursor: pointer;
+                color: var(--primary-color);
+                font-size: 24px;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="sidebar d-flex flex-column">
+            <div class="logo">
+                <img src="https://www.manupackaging.co.uk/images/ww/number%201.png" alt="Logo" />
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a href="CalculoFitas.html" class="nav-link">Fitas PP CwB</a>
+                </li>
+                <li class="nav-item">
+                    <a href="CalculosTransportadoras.html" class="nav-link">Calculo transportadoras</a>
+                </li>
+                <li class="nav-item">
+                    <a href="sanches.html" class="nav-link">Sanches</a>
+                </li>
+                <li class="nav-item active">
+                    <a href="tabelas.html" class="nav-link">Tabelas Transportadoras</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Botão para abrir o menu em dispositivos móveis -->
+        <span class="toggle-sidebar d-md-none">
+            <i class="bi bi-list"></i>
+        </span>
+
+        <!-- Espaço para o conteúdo -->
+        <div class="main-content">
+            <h1>Tabelas de Transportadoras</h1>
+            <div class="list-group">
+                <!-- Links para as tabelas -->
+                <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modalMiguel">Tabela Miguel</a>
+                <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modalAlfa">Tabela Alfa</a>
+                <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modalAguiaSul">Tabela Águia Sul</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Tabela Miguel -->
+    <div class="modal fade" id="modalMiguel" tabindex="-1" aria-labelledby="modalMiguelLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMiguelLabel">Tabela Miguel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <embed src="tabela_miguel.pdf" type="application/pdf" width="100%" height="500px">
+                </div>
+                <div class="modal-footer">
+                    <a href="tabela_miguel.pdf" target="_blank" class="btn btn-primary">Abrir em outra aba</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Tabela Alfa -->
+    <div class="modal fade" id="modalAlfa" tabindex="-1" aria-labelledby="modalAlfaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAlfaLabel">Tabela Alfa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <embed src="tabela_alfa.pdf" type="application/pdf" width="100%" height="500px">
+                </div>
+                <div class="modal-footer">
+                    <a href="tabela_alfa.pdf" target="_blank" class="btn btn-primary">Abrir em outra aba</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Tabela Águia Sul -->
+    <div class="modal fade" id="modalAguiaSul" tabindex="-1" aria-labelledby="modalAguiaSulLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAguiaSulLabel">Tabela Águia Sul</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <embed src="tabela_aguia_sul.pdf" type="application/pdf" width="100%" height="500px">
+                </div>
+                <div class="modal-footer">
+                    <a href="tabela_aguia_sul.pdf" target="_blank" class="btn btn-primary">Abrir em outra aba</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Ativar/desativar menu em dispositivos móveis
+        document.querySelector('.toggle-sidebar').addEventListener('click', function () {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
