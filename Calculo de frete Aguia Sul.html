@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculo de Frete - Aguia Sul</title>
+    <!-- Link para o Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Base do layout */
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Centralizar e ajustar o container */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Cabeçalho */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        /* Formulário */
+        form .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555555;
+            font-size: 1rem;
+        }
+
+        form input,
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+        }
+
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: #ffffff;
+        }
+
+        /* Botão */
+        form .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1rem;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Resultado */
+        #resultado {
+            background-color: #eef2f5;
+            padding: 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        #resultado h4 {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            font-size: 1.2rem;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+
+        /* Estilo Responsivo */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+                border-radius: 6px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            form .btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            #resultado h4 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calculadora de Frete - Aguia Sul</h1>
+        </header>
+
+        <form id="formFrete">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="peso" class="form-label">Peso Bruto (kg)</label>
+                    <input type="number" class="form-control" id="peso" placeholder="Ex: 15" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="valorNF" class="form-label">Valor da NF (R$)</label>
+                    <input type="number" class="form-control" id="valorNF" placeholder="Ex: 500" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="destino" class="form-label">Local de Destino</label>
+                    <select class="form-select" id="destino" required>
+                        <option value="">Selecione</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="ES">Espírito Santo</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Calcular Frete</button>
+        </form>
+
+        <div id="resultado" class="mt-4" style="display: none;">
+            <h4>Resumo do Frete</h4>
+            <p><strong>SECCAT:</strong> R$ <span id="seccat"></span></p>
+            <p><strong>GRIS:</strong> R$ <span id="gris"></span></p>
+            <p><strong>ADV:</strong> R$ <span id="adv"></span></p>
+            <p><strong>Pedágio:</strong> R$ <span id="pedagio"></span></p>
+            <p><strong>Frete Peso:</strong> R$ <span id="fretePeso"></span></p>
+            <p><strong>ICMS:</strong> R$ <span id="icms"></span></p>
+            <p><strong>Frete Total:</strong> R$ <span id="freteTotal"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('formFrete').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const peso = parseFloat(document.getElementById('peso').value);
+            const valorNF = parseFloat(document.getElementById('valorNF').value);
+            const destino = document.getElementById('destino').value;
+
+            if (!peso || !valorNF || !destino) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            // Tabela de valores de frete por destino
+            const tabelaFrete = {
+                'SP': [137.00, 156.81, 161.00, 189.91, 275.34, 1.07],
+                'MG': [137.00, 156.81, 161.00, 189.91, 275.34, 1.07],
+                'RJ': [189.34, 199.20, 255.31, 281.25, 326.40, 2.2347],
+                'ES': [189.34, 199.20, 255.31, 281.25, 326.40, 2.2347]
+            };
+
+            const pedagio = 8.00;
+            const txFixa = 15.98;
+            const grisPercent = valorNF <= 10000 ? 0.0012 : 0.0024;
+            const advPercent = 0.0032;
+            const aliquotaPercent = destino === "SP" || destino === "MG" || destino === "RJ" || destino === "ES" ? 0.12 : 0;
+
+            // Faixa do frete
+            const faixaFrete = peso <= 10 ? 0 :
+                peso <= 20 ? 1 :
+                peso <= 40 ? 2 :
+                peso <= 60 ? 3 : 4;
+
+            const seccat = tabelaFrete[destino][faixaFrete];
+            const gris = grisPercent * valorNF;
+            const adv = advPercent * valorNF;
+            const pedagioTotal = Math.ceil(peso / 100) * pedagio;
+
+            // Cálculo de frete por peso extra
+            const pesoFracionado = peso > 100 ? peso - 100 : 0;
+            const adicionalKg = tabelaFrete[destino][5];
+            const fretePeso = pesoFracionado * adicionalKg;
+
+            const baseCalculo1 = seccat + txFixa + fretePeso + adv + gris;
+            const aliquotaDecimal = 1 - aliquotaPercent;
+            const baseCalculo2 = baseCalculo1 / aliquotaDecimal;
+            const icms = baseCalculo1 * aliquotaPercent;
+
+            const freteTotal = baseCalculo1 + pedagioTotal + icms;
+
+            document.getElementById('seccat').innerText = seccat.toFixed(2);
+            document.getElementById('gris').innerText = gris.toFixed(2);
+            document.getElementById('adv').innerText = adv.toFixed(2);
+            document.getElementById('pedagio').innerText = pedagioTotal.toFixed(2);
+            document.getElementById('fretePeso').innerText = fretePeso.toFixed(2);
+            document.getElementById('icms').innerText = icms.toFixed(2);
+            document.getElementById('freteTotal').innerText = freteTotal.toFixed(2);
+
+            document.getElementById('resultado').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

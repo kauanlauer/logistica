@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação de Álbum</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #121212;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            margin: 10px 0;
+            color: #ffcc00;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background: #2a2a2a;
+            color: #ffcc00;
+        }
+
+        tr:nth-child(even) {
+            background: #2e2e2e;
+        }
+
+        tr:last-child td {
+            border: none;
+        }
+
+        td span {
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .footer {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Avaliação: "Blurred Lines" - Korina Yu</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Música</th>
+                    <th>Início</th>
+                    <th>Meio</th>
+                    <th>Fim</th>
+                    <th>Média</th>
+                </tr>
+            </thead>
+            <tbody id="tracks"></tbody>
+        </table>
+        <div class="footer">Criado por Kauan</div>
+    </div>
+
+    <script>
+        const tracks = [
+            { name: "Purple", scores: [2, 2, 2] },
+            { name: "Control", scores: [2, 3, 3] },
+            { name: "Wake Up", scores: [1, 1, 1] },
+            { name: "LAX", scores: [2, 2, 1] },
+            { name: "I Took a Pill in Ibiza", scores: [5, 5, 4] },
+            { name: "Love Never Felt the Same", scores: [3, 3, 3] },
+        ];
+
+        function calculateAverage(scores) {
+            const total = scores.reduce((sum, score) => sum + score, 0);
+            return (total / scores.length).toFixed(1);
+        }
+
+        const tracksTable = document.querySelector('#tracks');
+        tracks.forEach(track => {
+            const average = calculateAverage(track.scores);
+            const row = `
+                <tr>
+                    <td>${track.name}</td>
+                    <td><span>${track.scores[0]}</span></td>
+                    <td><span>${track.scores[1]}</span></td>
+                    <td><span>${track.scores[2]}</span></td>
+                    <td><span>${average}</span></td>
+                </tr>
+            `;
+            tracksTable.innerHTML += row;
+        });
+    </script>
+</body>
+</html>

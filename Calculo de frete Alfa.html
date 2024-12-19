@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cálculo de Frete Alfa Transporte</title>
+  <!-- Link para o Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f9f9f9;
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .btn-custom {
+      background-color: #007bff;
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-custom:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      background-color: #eef2f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    .result h3 {
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Cálculo de Frete Alfa Transporte</h1>
+
+    <form>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="pesoAlfa" class="form-label">Peso Bruto (kg):</label>
+          <input type="number" class="form-control" id="pesoAlfa" placeholder="Digite o peso bruto">
+        </div>
+
+        <div class="col-md-4">
+          <label for="valorAlfa" class="form-label">Valor da NF (R$):</label>
+          <input type="number" class="form-control" id="valorAlfa" placeholder="Digite o valor da NF">
+        </div>
+
+        <div class="col-md-4">
+          <label for="destinoAlfa" class="form-label">Destino:</label>
+          <select id="destinoAlfa" class="form-select">
+            <option value="PR">PR-Curitiba</option>
+            <option value="DF">DF-Distrito Federal</option>
+            <option value="ES">ES-Espírito Santo</option>
+            <option value="GO">GO-Goiás</option>
+            <option value="MG">MG-Minas Gerais</option>
+            <option value="RJ">RJ-Rio de Janeiro</option>
+            <option value="SC">SC-Santa Catarina</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-custom" onclick="calcularAlfa()">Calcular Frete</button>
+    </form>
+
+    <div id="alfaResultado" class="result" style="display:none;">
+      <h3>Resultado do Cálculo</h3>
+      <p><strong>Frete Peso:</strong> R$ <span id="fretePesoAlfa"></span></p>
+      <p><strong>Frete Valor (%):</strong> R$ <span id="freteValorAlfa"></span></p>
+      <p><strong>Pedágio:</strong> R$ <span id="pedagioAlfa"></span></p>
+      <p><strong>GRIS (%):</strong> R$ <span id="grisAlfa"></span></p>
+      <p><strong>Base de Cálculo 1:</strong> R$ <span id="baseCalculo1Alfa"></span></p>
+      <p><strong>Base de Cálculo 2:</strong> R$ <span id="baseCalculo2Alfa"></span></p>
+      <p><strong>Aliquota IMCs:</strong> <span id="aliquotaIMCsAlfa"></span></p>
+      <p><strong>ICMs:</strong> R$ <span id="icmsAlfa"></span></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function calcularAlfa() {
+      const pesoBrutoAlfa = parseFloat(document.getElementById('pesoAlfa').value);
+      const valorNFAlfa = parseFloat(document.getElementById('valorAlfa').value);
+      const destinoAlfa = document.getElementById('destinoAlfa').value;
+
+      const tabelaFreteAlfa = {
+        'PR': {peso50: 28.21, peso100: 33.85, taxaEmbarque: 33.85, fretePeso: 0.277, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'DF': {peso50: 112.84, peso100: 135.41, taxaEmbarque: 135.41, fretePeso: 1.241, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'ES': {peso50: 78.99, peso100: 95.91, taxaEmbarque: 95.91, fretePeso: 1.072, freteValor: 0.0030, gris: 0.0015, icms: 0.07},
+        'GO': {peso50: 98.17, peso100: 107.20, taxaEmbarque: 107.20, fretePeso: 1.264, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'MG': {peso50: 95.91, peso100: 100.43, taxaEmbarque: 100.43, fretePeso: 0.937, freteValor: 0.0030, gris: 0.0015, icms: 0.12},
+        'RJ': {peso50: 67.70, peso100: 78.99, taxaEmbarque: 78.99, fretePeso: 0.722, freteValor: 0.0030, gris: 0.0050, icms: 0.12},
+        'SC': {peso50: 33.85, peso100: 45.14, taxaEmbarque: 45.14, fretePeso: 0.395, freteValor: 0.0030, gris: 0.0015, icms: 0.12}
+      };
+
+      if (isNaN(pesoBrutoAlfa) || isNaN(valorNFAlfa)) {
+        alert("Por favor, preencha todos os campos corretamente.");
+        return;
+      }
+
+      const freteAlfa = tabelaFreteAlfa[destinoAlfa];
+
+      let fretePesoAlfa = 0;
+      if (pesoBrutoAlfa <= 50) {
+        fretePesoAlfa = freteAlfa.peso50;
+      } else if (pesoBrutoAlfa <= 100) {
+        fretePesoAlfa = freteAlfa.peso100;
+      } else {
+        let excessoPesoAlfa = pesoBrutoAlfa - 100;
+        fretePesoAlfa = freteAlfa.peso100 + (excessoPesoAlfa * freteAlfa.fretePeso);
+      }
+
+      let freteValorAlfa = valorNFAlfa * freteAlfa.freteValor;
+      let grisAlfa = valorNFAlfa * freteAlfa.gris;
+      let pedagioAlfa = Math.ceil(pesoBrutoAlfa / 100) * 4.98;
+
+      let baseCalculo1Alfa = fretePesoAlfa + freteValorAlfa + grisAlfa + freteAlfa.peso100;
+      let aliquotaIMCsAlfaDecimal = freteAlfa.icms;
+      let baseCalculo2Alfa = baseCalculo1Alfa / (1 - aliquotaIMCsAlfaDecimal);
+      let icmsAlfa = baseCalculo2Alfa * aliquotaIMCsAlfaDecimal;
+
+      document.getElementById('fretePesoAlfa').innerText = fretePesoAlfa.toFixed(2);
+      document.getElementById('freteValorAlfa').innerText = freteValorAlfa.toFixed(2);
+      document.getElementById('pedagioAlfa').innerText = pedagioAlfa.toFixed(2);
+      document.getElementById('grisAlfa').innerText = grisAlfa.toFixed(2);
+      document.getElementById('baseCalculo1Alfa').innerText = baseCalculo1Alfa.toFixed(2);
+      document.getElementById('baseCalculo2Alfa').innerText = baseCalculo2Alfa.toFixed(2);
+      document.getElementById('aliquotaIMCsAlfa').innerText = (freteAlfa.icms * 100) + '%';
+      document.getElementById('icmsAlfa').innerText = icmsAlfa.toFixed(2);
+
+      document.getElementById('alfaResultado').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
